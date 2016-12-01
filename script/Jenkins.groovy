@@ -1,23 +1,27 @@
 /**参数*/
-def PROJECT_NAME = 'wy'//项目名称
-def SERVIC_NAME = 'wy'//服务名称
-def MAVEN_ENV = 'alpha'//Maven打包环境
-def GIT_PATH = 'git@172.16.61.211:application/app-wy.git'//git地址
+def PROJECT_NAME = 'daq'//项目名称
+def SERVICE_NAME = 'reservation'//服务名称
+def SERVICE_FOLDER_NAME = 'service-reservation'//发布服务文件夹名称
+//def SERVICE
+def MAVEN_ENV = 'beta'//Maven打包环境
+def GIT_PATH = 'git@172.16.61.211:service/service-reservation.git'//git地址
 def USER_EMAIL = '13991544720@139.com'
-def NODES = ['alpha_facade01']//跳板机(在Jenkins中配置配置的节点名称,目标服务器从跳板机拷贝文件也用的这个名称)
-def TARGETS = []//目标服务器
+def NODES = ['beta_facade_mq']//跳板机(在Jenkins中配置配置的节点名称,目标服务器从跳板机拷贝文件也用的这个名称)
+def TARGETS = [['service01']]//目标服务器
 def SLEEP_TIME = 0//等待服务启动时间,毫秒,如果只有一个服务，或者不需要等待设置为0
 
 /**拼装的配置*/
 //project
 def PROJECT_PATH = "/home/jhd/app/${PROJECT_NAME}/"//项目所在目录
 //service
-def SERVICE_PATH = "${PROJECT_PATH}${SERVIC_NAME}/"//服务目录
+//如果没有设置服务文件夹名称，则使用服务名称作为文件夹名称
+def _service_folder = SERVICE_FOLDER_NAME.length() == 0?SERVICE_NAME:SERVICE_FOLDER_NAME;
+def SERVICE_PATH = "${PROJECT_PATH}${_service_folder}/"//服务目录
 def DUBBO_SH_NAME = 'dubbo_sh.zip'//dubbo启动脚本名称
 def DUBBO_SH_FOLDER_NAME = 'dubbo_sh'//启动脚本文件夹名称
 //pageage
-def PACKAGE_NAME = "${SERVIC_NAME}-facade-impl-upgrade.zip"//包名
-def PACKAGE_FOLDER_NAME = "$SERVIC_NAME-facade-impl"//包所在文件夹名称
+def PACKAGE_NAME = "${SERVICE_NAME}-upgrade.zip"//包名
+def PACKAGE_FOLDER_NAME = "$SERVICE_NAME-facade-impl"//包所在文件夹名称
 //jenkins
 def JENKINS_PATH = '/home/jhd/warFiles/jenkins/'//跳板机Jenkins临时目录
 def JENKINS_USER = 'jhd'
@@ -30,7 +34,7 @@ def MAVEN_BIN_PATH = '/usr/local/maven/apache-maven-3.3.9/bin/'
 /**配置详情*/
 def _config = ['project': ['name':PROJECT_NAME,'path':PROJECT_PATH],
                'package':['name':PACKAGE_NAME,'folder_name':PACKAGE_FOLDER_NAME],
-               'service': ['name':SERVIC_NAME,'path':SERVICE_PATH,'dubbo_sh_name':DUBBO_SH_NAME,'dubbo_sh_folder_name':DUBBO_SH_FOLDER_NAME],
+               'service': ['name':SERVICE_NAME,'path':SERVICE_PATH,'dubbo_sh_name':DUBBO_SH_NAME,'dubbo_sh_folder_name':DUBBO_SH_FOLDER_NAME],
                'node': ['nodes':NODES,'targets':TARGETS,'sleep_time':SLEEP_TIME],
                'jenkins':['path':JENKINS_PATH,'local_ip':JENKINS_LOCAL_IP,'user':JENKINS_USER,'tools_path':JENKINS_TOOLS_PATH,'local_tools_path':JENKINS_LOCAL_MYTOOLS_PTAH],
                'maven':['bin_path':MAVEN_BIN_PATH,'service_env':MAVEN_ENV],'user':['email':USER_EMAIL]]
