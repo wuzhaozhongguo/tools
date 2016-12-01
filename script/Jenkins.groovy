@@ -25,8 +25,6 @@ def PACKAGE_FOLDER_NAME = "$SERVICE_NAME-facade-impl"//包所在文件夹名称
 //jenkins
 def JENKINS_PATH = '/home/jhd/warFiles/jenkins/'//跳板机Jenkins临时目录
 def JENKINS_USER = 'jhd'
-def JENKINS_LOCAL_IP = 'infra01'
-def JENKINS_LOCAL_MYTOOLS_PTAH = '/home/jhd/.jenkins/mytools/'//本地工具文件夹
 def JENKINS_TOOLS_PATH = "${JENKINS_PATH}tools/"
 //maven
 def MAVEN_BIN_PATH = '/usr/local/maven/apache-maven-3.3.9/bin/'
@@ -36,7 +34,7 @@ def _config = ['project': ['name':PROJECT_NAME,'path':PROJECT_PATH],
                'package':['name':PACKAGE_NAME,'folder_name':PACKAGE_FOLDER_NAME],
                'service': ['name':SERVICE_NAME,'path':SERVICE_PATH,'dubbo_sh_name':DUBBO_SH_NAME,'dubbo_sh_folder_name':DUBBO_SH_FOLDER_NAME],
                'node': ['nodes':NODES,'targets':TARGETS,'sleep_time':SLEEP_TIME],
-               'jenkins':['path':JENKINS_PATH,'local_ip':JENKINS_LOCAL_IP,'user':JENKINS_USER,'tools_path':JENKINS_TOOLS_PATH,'local_tools_path':JENKINS_LOCAL_MYTOOLS_PTAH],
+               'jenkins':['path':JENKINS_PATH,'user':JENKINS_USER,'tools_path':JENKINS_TOOLS_PATH],
                'maven':['bin_path':MAVEN_BIN_PATH,'service_env':MAVEN_ENV],'user':['email':USER_EMAIL]]
 try {
     /**更新代码，打包*/
