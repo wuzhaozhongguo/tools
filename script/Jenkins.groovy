@@ -1,7 +1,7 @@
 /**参数*/
 def PROJECT_NAME = 'daq'//项目名称
 def SERVICE_NAME = 'reservation'//服务名称
-def SERVICE_FOLDER_NAME = 'service-reservation'//发布服务文件夹名称
+def SERVICE_FOLDER_NAME = 'service-reservation'//发布服务文件夹名称,不配置默认使用服务名称作为服务文件夹名称
 //def SERVICE
 def MAVEN_ENV = 'beta'//Maven打包环境
 def GIT_PATH = 'git@172.16.61.211:service/service-reservation.git'//git地址
