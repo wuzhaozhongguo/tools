@@ -36,6 +36,9 @@ def _config = ['project': ['name':PROJECT_NAME,'path':PROJECT_PATH],
                'node': ['nodes':NODES,'targets':TARGETS,'sleep_time':SLEEP_TIME],
                'jenkins':['path':JENKINS_PATH,'user':JENKINS_USER,'tools_path':JENKINS_TOOLS_PATH],
                'maven':['bin_path':MAVEN_BIN_PATH,'service_env':MAVEN_ENV],'user':['email':USER_EMAIL]]
+			   
+def failMessage = "无错误信息"
+def message = "无信息"
 try {
     /**更新代码，打包*/
     node ('master'){
