@@ -123,7 +123,7 @@ try {
 }finally {
     stage ('Mail'){
         try {
-            mail bcc: '765105646@qq.com', body: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) ${env.BUILD_URL} ${failMessage}", cc: '', from: '1323548361@qq.com', replyTo: '', subject: message, to: "${_config.user.email}"
+            mail bcc: '', body: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) ${env.BUILD_URL} ${failMessage}", cc: '', from: '1323548361@qq.com', replyTo: '', subject: message, to: "${_config.user.email}"
         } catch (e) {
             e.printStackTrace()
         }
