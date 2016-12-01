@@ -8,7 +8,7 @@ def GIT_PATH = 'git@172.16.61.211:service/service-reservation.git'//git地址
 def USER_EMAIL = '13991544720@139.com'
 def NODES = ['beta_facade_mq']//跳板机(在Jenkins中配置配置的节点名称,目标服务器从跳板机拷贝文件也用的这个名称)
 def TARGETS = [['service01']]//目标服务器
-def SLEEP_TIME = 0//等待服务启动时间,毫秒,如果只有一个服务，或者不需要等待设置为0
+def SLEEP_TIME = 0//等待服务启动时间,秒,如果只有一个服务，或者不需要等待设置为0
 
 /**拼装的配置*/
 //project
@@ -96,7 +96,7 @@ try {
                             __sh_target_restart_dubbo.toString()+'''
                         '''
                     sh "sh deploy.sh"
-                }else{//发布到目标机器
+                }else{//循环发布到目标机器
                     for (def __targetNode in __targets){
 
                         sh "ssh jhd@${__targetNode} 'mkdir -p ${_config.jenkins.tools_path}'"//创建工具文件夹
