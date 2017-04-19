@@ -2,10 +2,9 @@
 def PROJECT_NAME = 'daq'//项目名称
 def SERVICE_NAME = 'reservation'//服务名称
 def SERVICE_FOLDER_NAME = 'service-reservation'//发布服务文件夹名称,不配置默认使用服务名称作为服务文件夹名称
-//def SERVICE
 def MAVEN_ENV = 'beta'//Maven打包环境
 def GIT_PATH = 'git@172.16.61.211:service/service-reservation.git'//git地址
-def USER_EMAIL = '765105646@qq.com'
+def USER_EMAIL = '765105646@qq.com'//邮件接收人
 def NODES = ['beta_facade_mq']//跳板机(在Jenkins中配置配置的节点名称,目标服务器从跳板机拷贝文件也用的这个名称)
 def TARGETS = [['service01']]//目标服务器
 def SLEEP_TIME = 0//等待服务启动时间,秒,如果只有一个服务，或者不需要等待设置为0
@@ -48,7 +47,7 @@ try {
             }
         }
         stage('Build'){
-            sh "${_config.maven.bin_path}/mvn  -Dmaven.test.skip=true clean package -P ${_config.maven.service_env}"
+            sh "${_config.maven.bin_path}/mvn  -Dmaven.test.skip=true clean package -P ${_config.maven.service_env} -U"
         }
         stage('Stash'){
             stash includes: "${_config.package.folder_name}/target/*.zip", name:"${_config.package.name}"
@@ -98,6 +97,7 @@ try {
                         '''
                     sh "sh deploy.sh"
                 }else{//循环发布到目标机器
+                    def _target_index = 0
                     for (def __targetNode in __targets){
 
                         sh "ssh jhd@${__targetNode} 'mkdir -p ${_config.jenkins.tools_path}'"//创建工具文件夹
@@ -114,8 +114,11 @@ try {
                                 __sh_target_restart_dubbo.toString()+'''
                         '''
                         sh "ssh jhd@${__targetNode} 'bash -s' < deploy.sh"
-                        /***等待服务启动时间*/
-                        sleep _config.node.sleep_time
+                        /***等待第一个服务启动时间*/
+                        if (_target_index == 0){
+                            sleep _config.node.sleep_time
+                        }
+                        _target_index ++
                     }
                 }
             }
