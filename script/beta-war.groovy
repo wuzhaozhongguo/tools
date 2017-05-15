@@ -18,7 +18,7 @@ def SLEEP_TIME = 0//等待服务启动时间,秒,如果只有一个服务，或�
 def PROJECT_PATH = "/home/jhd/web/${PROJECT_NAME}/"//项目所在目录
 //service
 //如果没有设置服务文件夹名称，则使用服务名称作为文件夹名称
-def _service_folder = SERVICE_FOLDER_NAME.length() == 0?SERVICE_NAME:SERVICE_FOLDER_NAME;
+def _service_folder = SERVICE_FOLDER_NAME.length() == 0?SERVICE_NAME:SERVICE_FOLDER_NAME
 def SERVICE_PATH = "${PROJECT_PATH}${_service_folder}/"//服务目录
 def CONTAINER_SH_NAME = 'tomcat.zip'//容器启动脚本名称
 def CONTAINER_SH_FOLDER_NAME = 'tomcat'//启动脚本文件夹名称
