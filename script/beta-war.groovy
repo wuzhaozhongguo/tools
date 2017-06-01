@@ -1,12 +1,12 @@
 /**参数*/
-def PROJECT_NAME = 'wy'//项目名称
+def PROJECT_NAME = 'yt'//项目名称
 def SERVICE_NAME = 'im'//服务名称
 def SERVICE_FOLDER_NAME = 'service-im'//发布服务文件夹名称,不配置默认使用服务名称作为服务文件夹名称
-def MAVEN_ENV = 'beta-wy'//Maven打包环境
+def MAVEN_ENV = 'beta-jhd'//Maven打包环境
 def GIT_PATH = 'git@172.16.61.211:service/service-im.git'//git地址
 def USER_EMAIL = '765105646@qq.com'//邮件接收人
-def NODES = ['wy1']//跳板机(在Jenkins中配置配置的节点名称,目标服务器从跳板机拷贝文件也用的这个名称)
-def TARGETS = [['wy3']]//目标服务器
+def NODES = ['beta_facade_mq']//跳板机(在Jenkins中配置配置的节点名称,目标服务器从跳板机拷贝文件也用的这个名称)
+def TARGETS = [['infra02']]//目标服务器
 //端口配置
 def SHUTDOWN_PORT=8029
 def HTTP_PORT=8104
@@ -108,18 +108,20 @@ try {
                 __sh_target_restart_dubbo.append(" sh ${_config.service.path}/bin/shutdown-f.sh;")
                 __sh_target_restart_dubbo.append(" sh ${_config.service.path}/bin/startup.sh;")
 
+                //跳板机工具文件夹
+                sh "mkdir -p ${_config.jenkins.tools_path}"//创建工具文件夹
+                //判断容器存在不，如果没有就从jenkins所在机器传一份上来
+                def fileExist = fileExists "${_config.jenkins.tools_path}/${_config.container.container_folder_name}/bin/shutdown-f.sh"
+                if (!fileExist){
+                    dir("${_config.jenkins.tools_path}/"){
+                        unstash "${_config.container.container_name}"
+                        sh "unzip -o ${_config.jenkins.tools_path}${_config.container.container_name} -d ${_config.jenkins.tools_path}/"
+                    }
+                }
+
                 if (!__targets){//没有目标机器，发布在facade
                     echo '发布在跳板机上'
-                    sh "mkdir -p ${_config.jenkins.tools_path}"//创建工具文件夹
                     sh "mkdir -p ${_config.project.path}"//创建项目目录
-                    //判断容器存在不，如果没有就从jenkins所在机器传一份上来
-                    def fileExist = fileExists "${_config.jenkins.tools_path}/${_config.container.container_folder_name}/bin/shutdown-f.sh"
-                    if (!fileExist){
-                        dir("${_config.jenkins.tools_path}/"){
-                            unstash "${_config.container.container_name}"
-                            sh "unzip -o ${_config.jenkins.tools_path}${_config.container.container_name} -d ${_config.jenkins.tools_path}/"
-                        }
-                    }
 
                     //如果没有发过服务就拷贝一份容器
                     def serviceContainerExist = fileExists "${_config.service.path}/bin/shutdown-f.sh"
