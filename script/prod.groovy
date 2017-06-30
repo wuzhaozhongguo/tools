@@ -4,10 +4,11 @@ def SERVICE_NAME = 'reservation'//服务名称
 def SERVICE_FOLDER_NAME = 'service-reservation'//发布服务文件夹名称,不配置默认使用服务名称作为服务文件夹名称
 def MAVEN_ENV = 'beta'//Maven打包环境
 def GIT_PATH = 'git@172.16.61.211:service/service-reservation.git'//git地址
+def GIT_BRANCH = 'dev'
 def USER_EMAIL = '765105646@qq.com'//邮件接收人
 def NODES = ['beta_facade_mq']//跳板机(在Jenkins中配置配置的节点名称,目标服务器从跳板机拷贝文件也用的这个名称)
 def TARGETS = [['service01']]//目标服务器
-def SLEEP_TIME = 0//等待服务启动时间,秒,如果只有一个服务，或者不需要等待设置为0
+def SLEEP_TIME = 0//等待第一个服务启动时间,秒,如果只有一个服务，或者不需要等待设置为0
 
 /**拼装的配置*/
 //project
@@ -27,6 +28,8 @@ def JENKINS_USER = 'jhd'
 def JENKINS_TOOLS_PATH = "${JENKINS_PATH}tools/"
 //maven
 def MAVEN_BIN_PATH = '/usr/local/maven/apache-maven-3.3.9/bin/'
+//git
+def GIT_BRANCH_DEF = GIT_BRANCH.trim() == "" ?'master':GIT_BRANCH
 
 /**配置详情*/
 def _config = ['project': ['name':PROJECT_NAME,'path':PROJECT_PATH],
@@ -34,6 +37,7 @@ def _config = ['project': ['name':PROJECT_NAME,'path':PROJECT_PATH],
                'service': ['name':SERVICE_NAME,'path':SERVICE_PATH,'dubbo_sh_name':DUBBO_SH_NAME,'dubbo_sh_folder_name':DUBBO_SH_FOLDER_NAME],
                'node': ['nodes':NODES,'targets':TARGETS,'sleep_time':SLEEP_TIME],
                'jenkins':['path':JENKINS_PATH,'user':JENKINS_USER,'tools_path':JENKINS_TOOLS_PATH],
+               'git': ['path':GIT_PATH,'branch':GIT_BRANCH_DEF],
                'maven':['bin_path':MAVEN_BIN_PATH,'service_env':MAVEN_ENV],'user':['email':USER_EMAIL]]
 			   
 def failMessage = "无错误信息"
@@ -43,7 +47,7 @@ try {
     node ('master'){
         stage ('Checkout'){
             timeout(time: 60, unit: 'SECONDS') {
-                git credentialsId: 'ssh', url: GIT_PATH
+                git branch: "${_config.git.branch}",credentialsId: 'ssh', url: GIT_PATH
             }
         }
         stage('Build'){
