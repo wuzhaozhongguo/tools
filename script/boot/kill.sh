@@ -5,7 +5,8 @@ kills(){
     if [[ $tpid ]]; then
         echo 'Kill Process!'
         kill -9 $tpid
-	rm -f $tpid_file
+        sleep 3s
+	    rm -f $tpid_file
     fi
 }
 kills "tpid"
