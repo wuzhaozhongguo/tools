@@ -1,4 +1,5 @@
 #!/bin/sh
+export JENKINS_NODE_COOKIE=dontKillMe
 RUN_PARAM_JAVA_OPTS=${1}
 JAVA_HOME=${2}
 JAR_NAME=`ls *.jar | head -n 1 | awk '{print $0}'`
